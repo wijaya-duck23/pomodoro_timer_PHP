@@ -1,0 +1,59 @@
+version: '3'
+
+services:
+  # PHP Service
+  app:
+    image: php:8.0-apache
+    container_name: pomodoro-app
+    restart: unless-stopped
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8080:80"
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+    depends_on:
+      - db
+    networks:
+      - pomodoro-network
+
+  # MySQL Service
+  db:
+    image: mysql:5.7
+    container_name: pomodoro-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: pomodoro_db
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: pomodoro
+      MYSQL_PASSWORD: pomodoro
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./database_setup.sql:/docker-entrypoint-initdb.d/database_setup.sql
+    networks:
+      - pomodoro-network
+
+  # phpMyAdmin Service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pomodoro-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - pomodoro-network
+    depends_on:
+      - db
+
+# Docker Networks
+networks:
+  pomodoro-network:
+    driver: bridge
+
+# Docker Volumes
+volumes:
+  mysql-data:
+    driver: local 

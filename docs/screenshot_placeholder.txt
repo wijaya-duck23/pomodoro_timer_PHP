@@ -1,0 +1,6 @@
+This file is a placeholder for the application screenshot.
+
+To add a screenshot:
+1. Capture a screenshot of your running Pomodoro Timer application
+2. Save it as screenshot.png (or another image format) in this directory
+3. Update the README.md to point to the correct screenshot filename if needed 
